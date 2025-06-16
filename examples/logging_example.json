@@ -1,0 +1,65 @@
+[
+    {
+        "id": "5367a1045d684042",
+        "type": "LoggerNode",
+        "z": "f6f2187d.f17ca8",
+        "g": "fc8e7e8bb283efa8",
+        "name": "Logger Example",
+        "logEnabled": true,
+        "logger": "f960d546a00adf79",
+        "logTemplateOverrideEnabled": false,
+        "logTemplateOverride": "message:",
+        "x": 900,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa3762672479d549",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "g": "fc8e7e8bb283efa8",
+        "name": "test",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 750,
+        "y": 60,
+        "wires": [
+            [
+                "5367a1045d684042"
+            ]
+        ]
+    },
+    {
+        "id": "f960d546a00adf79",
+        "type": "ConsoleLoggerConfigNode",
+        "name": "Test Console Logger",
+        "platform": "rest",
+        "template": "message:{{{json msg}}}",
+        "level": "INFO"
+    },
+    {
+        "id": "6779efc5d8fdf0d5",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@theotherwillembotha/node-red-telemetry": "1.0.0",
+            "@theotherwillembotha/node-red-plugincore": "0.0.51"
+        }
+    }
+]

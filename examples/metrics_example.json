@@ -1,0 +1,393 @@
+[
+    {
+        "id": "6a09afbc6dcd74b5",
+        "type": "CounterMetricNode",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Total Messages",
+        "counterConfig": "50f031bdf8f60f85",
+        "x": 400,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f6815f22fc5402fa",
+        "type": "TimerMetricNode",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Timer Example Start",
+        "timerConfig": "6a528fb7faa12ba3",
+        "timerFunction": "Start",
+        "timerShowStatus": "None",
+        "x": 420,
+        "y": 660,
+        "wires": [
+            [
+                "5d238d76e1d4f09e"
+            ]
+        ]
+    },
+    {
+        "id": "d4f6603c53ef3036",
+        "type": "TimerMetricNode",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Timer Example Stop",
+        "timerConfig": "6a528fb7faa12ba3",
+        "timerFunction": "Stop",
+        "timerShowStatus": "Average",
+        "x": 760,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5d238d76e1d4f09e",
+        "type": "delay",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Delay",
+        "pauseType": "random",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "3",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 590,
+        "y": 660,
+        "wires": [
+            [
+                "d4f6603c53ef3036",
+                "06342a6891839417",
+                "a919cf7f72196687"
+            ]
+        ]
+    },
+    {
+        "id": "a919cf7f72196687",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "reset",
+        "func": "return {}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 660,
+        "wires": [
+            [
+                "8a29909341ed0c16"
+            ]
+        ]
+    },
+    {
+        "id": "d0f4d32b0a541fda",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 640,
+        "wires": [
+            [
+                "081c7b471cd6c8ad"
+            ]
+        ]
+    },
+    {
+        "id": "e04a88992792f6c3",
+        "type": "link out",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "8937eb57234bb846"
+        ],
+        "x": 925,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "8937eb57234bb846",
+        "type": "link in",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "link in 1",
+        "links": [
+            "e04a88992792f6c3"
+        ],
+        "x": 165,
+        "y": 680,
+        "wires": [
+            [
+                "081c7b471cd6c8ad"
+            ]
+        ]
+    },
+    {
+        "id": "08e17cc370109cdb",
+        "type": "GaugeMetricNode",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Message++",
+        "gaugeFunction": "Increase",
+        "gaugeConfig": "a90b1d118eeefaee",
+        "x": 390,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "081c7b471cd6c8ad",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "split",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 660,
+        "wires": [
+            [
+                "08e17cc370109cdb",
+                "6a09afbc6dcd74b5",
+                "f6815f22fc5402fa"
+            ]
+        ]
+    },
+    {
+        "id": "06342a6891839417",
+        "type": "GaugeMetricNode",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Message--",
+        "gaugeFunction": "Decrease",
+        "gaugeConfig": "a90b1d118eeefaee",
+        "x": 730,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8a29909341ed0c16",
+        "type": "delay",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "Delay",
+        "pauseType": "random",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "3",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 830,
+        "y": 660,
+        "wires": [
+            [
+                "e04a88992792f6c3"
+            ]
+        ]
+    },
+    {
+        "id": "2d46ab952d4baea8",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "get metrics",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 780,
+        "wires": [
+            [
+                "5641c65a8f7456ab"
+            ]
+        ]
+    },
+    {
+        "id": "5641c65a8f7456ab",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "http:get",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:6644/mymetrics",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "myapikey",
+                "valueType": "other",
+                "valueValue": "sillywalks"
+            }
+        ],
+        "x": 260,
+        "y": 780,
+        "wires": [
+            [
+                "75d5eda1d45cee91"
+            ]
+        ]
+    },
+    {
+        "id": "75d5eda1d45cee91",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "g": "f8d610e86b07d16b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "50f031bdf8f60f85",
+        "type": "CounterMetricConfigNode",
+        "name": "My Counter",
+        "description": "an example couter",
+        "reset": false,
+        "metricsEnabled": true,
+        "metricsReference": "037dcb026613b804"
+    },
+    {
+        "id": "6a528fb7faa12ba3",
+        "type": "TimerMetricConfigNode",
+        "name": "Timer Example",
+        "description": "an example timer",
+        "metricType": "summary",
+        "buckettype": "exponential",
+        "buckettype_manual_intervals": "0.001, 0.01, 0.1, 1, 2, 5",
+        "buckettype_linear_start": "0",
+        "buckettype_linear_interval": "5",
+        "buckettype_linear_count": "10",
+        "buckettype_exponential_start": "1",
+        "buckettype_exponential_factor": "2",
+        "buckettype_exponential_count": "10",
+        "percentiletype": "default",
+        "percentiletype_manual_intervals": "",
+        "metricsEnabled": true,
+        "metricsReference": "037dcb026613b804"
+    },
+    {
+        "id": "a90b1d118eeefaee",
+        "type": "GaugeMetricConfigNode",
+        "name": "Messages being processed",
+        "description": "an example gauge",
+        "reset": true,
+        "metricsEnabled": true,
+        "metricsReference": "037dcb026613b804"
+    },
+    {
+        "id": "037dcb026613b804",
+        "type": "MetricsConfigNode",
+        "name": "MyMetrics",
+        "webhook": "16de7990c4cf35cc",
+        "webhookPath": "/mymetrics",
+        "webhookAuth": "none",
+        "webhookAuth_basic_username": "testuser",
+        "webhookAuth_basic_password": "testpassword",
+        "webhookAuth_apikey_mechanism": "queryparam",
+        "webhookAuth_apikey_key": "myapikey",
+        "webhookAuth_apikey_value": "myapikeyvalue",
+        "reverseProxies_enabled": false,
+        "reverseProxies_connections": [],
+        "_reverseProxies_connections_0": "",
+        "_reverseProxies_connections_1": "",
+        "_reverseProxies_connections_2": "",
+        "_reverseProxies_connections_3": "",
+        "_reverseProxies_connections_4": "",
+        "_reverseProxies_connections_5": "",
+        "_reverseProxies_connections_6": "",
+        "_reverseProxies_connections_7": "",
+        "_reverseProxies_connections_8": "",
+        "_reverseProxies_connections_9": ""
+    },
+    {
+        "id": "16de7990c4cf35cc",
+        "type": "WebhookServerConfigNode",
+        "name": "testServer",
+        "port": "6644",
+        "externalHost": "localhost",
+        "externalPort": "6644"
+    },
+    {
+        "id": "4974443226ddc0bb",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@theotherwillembotha/node-red-telemetry": "1.0.0",
+            "@theotherwillembotha/node-red-plugincore": "0.0.51"
+        }
+    }
+]

@@ -1,0 +1,62 @@
+{
+  "name": "@theotherwillembotha/node-red-telemetry",
+  "version": "1.0.0",
+  "description": "Node-RED nodes for structured logging and Prometheus metrics, built on node-red-plugincore.",
+  "author": "Willem Botha (@theotherwillembotha)",
+  "license": "ISC",
+  "keywords": [
+    "node-red", "logging", "metrics", "prometheus", "winston", "loki", "grafana", "observability", "monitoring"
+  ],
+  "main": "./build/index.js",
+  "exports": "./build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run clean && tsc && npm run generate-nodes && npm run copy-files",
+    "clean": "rm -rf ./build",
+    "generate-nodes": "node build/GenerateNodes.js",
+    "copy-files": "cp -r ./icons ./build/"
+  },
+  "files": ["build/", "icons/", "LICENSE", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theotherwillembotha/nodered_telemetry.git"
+  },
+  "bugs": {
+    "url": "https://github.com/theotherwillembotha/nodered_telemetry/issues"
+  },
+  "homepage": "https://github.com/theotherwillembotha/nodered_telemetry#readme",
+  "engines": {
+    "node": ">=18",
+    "nodered": ">=4.0.0"
+  },
+  "dependencies": {
+    "@theotherwillembotha/node-red-plugincore": "^0.0.51",
+    "axios": "^1.9.0",
+    "express": "^5.1.0",
+    "handlebars": "^4.7.8",
+    "json5": "^2.2.3",
+    "network": "^0.7.0",
+    "prom-client": "^15.1.1",
+    "tough-cookie": "^5.1.2",
+    "whatwg-url": "^14.2.0",
+    "winston": "^3.17.0",
+    "winston-loki": "^6.1.3",
+    "ws": "^8.18.2"
+  },
+  "devDependencies": {
+    "@theotherwillembotha/node-red-plugincore": "../nodered_plugincore",
+    "@types/node": "^22.15.16",
+    "@types/node-red": "~1.3.5",
+    "@types/whatwg-url": "^13.0.0",
+    "@types/ws": "^8.18.1"
+  },
+  "node-red": {
+    "version": ">=4.0.0",
+    "nodes": {
+      "telemetry": "./build/Nodes.js"
+    },
+    "plugins": {
+      "telemetry": "./build/Plugins.js"
+    }
+  }
+}

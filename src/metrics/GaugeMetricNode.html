@@ -1,0 +1,54 @@
+
+<script type="text/javascript" template-section="onCompose">
+    node
+        .addDefault("name", { value:"Gauge Example", required:true})
+        .addDefault("gaugeFunction", { value:"Increase", required:true})
+        .setIcon("prometheus.png")
+        .setPaletteLabel("Gauge Metric")
+        .setLabelStyle("node_label_white")
+        .setLabel(function() {return this.name })
+        .setColor("#E75127")
+        .setInput("input")
+        .addOutputs("passthrough")
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditPrepare">
+    let node = this;
+
+    let gaugeFunctionSelection = $("#node-input-gaugeFunction");
+    gaugeFunctionSelection.typedInput({type:"gaugeFunction", types:[{
+        value: "gaugeFunction",
+        options: [
+            { value: "Increase", label: "Increase"},
+            { value: "Decrease", label: "Decrease"}
+        ]
+    }]});
+</script>
+
+<script type="text/html" template-section="onIncludeEditForm">
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-name"><i class="fa fa-font"></i> Name</label>
+        <input type="text" id="node-input-name" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-gaugeFunction"><i class="fa fa-cogs"></i> Function</label>
+        <input type="text" id="node-input-gaugeFunction" />
+    </div>
+</script>
+
+
+<script type="text/markdown" template-section="onIncludeDocumentation">
+Increases or decreases a Prometheus gauge by 1 each time a message is received. The current gauge value is displayed on the node status.
+
+### Inputs
+: *msg* (object) : any Node-RED message. The payload is not read; the gauge is adjusted by 1 in the configured direction.
+
+### Outputs
+: *msg* (object) : the original message, passed through unchanged.
+
+### Properties
+: *function* (select) : the direction to adjust the gauge on each message.
+- **Increase** — increments the gauge by 1
+- **Decrease** — decrements the gauge by 1
+</script>

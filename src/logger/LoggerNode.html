@@ -1,0 +1,38 @@
+
+<script type="text/javascript" template-section="onCompose">
+    node
+        .addDefault("name", { value:"Logger Example", required:true})
+        .setIcon("logger.png")
+        .setPaletteLabel("Logger")
+        .setLabelStyle("node_label_white")
+        .setLabel(function() {return this.name })
+        .setColor("#08A3A3")
+        .setInput("passthrough")
+        .addOutputs("passthrough")
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditPrepare">
+    // hide the enable logging button and show logging area by default.
+    let logEnabled = $("#node-input-logEnabled");
+    logEnabled.prop('checked', true);
+    logEnabled.trigger("change");
+
+    $("#section_loggerconfig").find(".logEnableCheck").hide();
+</script>
+
+<script type="text/html" template-section="onIncludeEditForm">
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-name"><i class="fa fa-font"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>
+
+<script type="text/markdown" template-section="onIncludeDocumentation">
+Logs the incoming message to the configured logging backend and passes it through unchanged.
+
+### Inputs
+: *msg* (object) : any Node-RED message. The full message object is passed to the logger and formatted using the Mustache template configured on the logger config node.
+
+### Outputs
+: *msg* (object) : the original message, passed through unchanged.
+</script>
