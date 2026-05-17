@@ -1,7 +1,7 @@
 
 import { Node } from "node-red";
 
-import { BaseNode, BaseNodeConfig, Log, SourceUtility, LoggerTemplateConfig, NodeDescription, onInput, ConsoleLoggerConfigNode, RestLoggerConfigNode, LokiLoggerConfigNode } from "@theotherwillembotha/node-red-plugincore"
+import { BaseNode, BaseNodeConfig, SourceUtility, LoggerTemplateConfig, NodeDescription, onInput, ConsoleLoggerConfigNode, RestLoggerConfigNode, LoggerService, Log } from "@theotherwillembotha/node-red-plugincore"
 import { InputConfig } from "@theotherwillembotha/node-red-plugincore"
 import { LoggerTemplate } from "@theotherwillembotha/node-red-plugincore"
 import { Logger } from "@theotherwillembotha/node-red-plugincore"
@@ -18,7 +18,7 @@ interface LoggerNodeConfig extends BaseNodeConfig, InputConfig, LoggerTemplateCo
     templates: [
         { template: LoggerTemplate, config: {}}
     ],
-    dependencies:[ ConsoleLoggerConfigNode, RestLoggerConfigNode, LokiLoggerConfigNode ],
+    dependencies:[ LoggerService ],
     tags: [ "Logging" ]
 })
 export class LoggerNode extends BaseNode<LoggerNodeConfig> {

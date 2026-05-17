@@ -14,7 +14,14 @@ Either use the **Manage Palette** option in the Node-RED editor, or run the foll
 npm install @theotherwillembotha/node-red-telemetry
 ```
 
-> **Prerequisite:** This package requires `@theotherwillembotha/node-red-plugincore` to be installed. It will be installed automatically as a dependency.
+> [!IMPORTANT]
+> **This plugin requires [`@theotherwillembotha/node-red-plugincore`](https://github.com/theotherwillembotha/nodered_plugincore) to be installed.**
+>
+> `node-red-plugincore` is declared as a dependency and npm will install it automatically alongside this package. However, due to a [known Node-RED limitation](https://github.com/node-red/node-red/issues/3529), packages that arrive as transitive npm dependencies are only discovered by the Node-RED runtime on the **next startup**.
+>
+> **You have two options:**
+> - Install [`@theotherwillembotha/node-red-plugincore`](https://flows.nodered.org/node/@theotherwillembotha/node-red-plugincore) via the palette manager or `npm install` **first**, then install this plugin — both will be available immediately without a restart.
+> - Install this plugin directly — `node-red-plugincore` will be installed automatically alongside it. **Restart Node-RED** once and both packages will be fully loaded.
 
 ### Nodes
 
@@ -22,7 +29,7 @@ npm install @theotherwillembotha/node-red-telemetry
 
 | Node | Description |
 |------|-------------|
-| **Logger Node** | Logs incoming messages to a configured logging backend (Console, REST, or Loki). Passes the message through unchanged. Attach a Console Logger, REST Logger, or Loki Logger config node to control the destination. |
+| **Logger Node** | Logs incoming messages to a configured logging backend. Passes the message through unchanged. Attach a Console Logger or REST Logger config node (both provided by `node-red-plugincore`), or a Loki Logger config node (provided by [`node-red-loki`](https://github.com/theotherwillembotha/nodered_loki)) to control the destination. |
 
 #### Metrics
 
@@ -34,16 +41,16 @@ npm install @theotherwillembotha/node-red-telemetry
 
 ### Config nodes (provided by node-red-plugincore)
 
-These config nodes are installed alongside this package as part of `node-red-plugincore` and are shared across all plugins built on the framework.
+These config nodes are shared across all plugins built on the framework.
 
-| Config node | Purpose |
-|-------------|---------|
-| Console Logger | Writes log output to stdout |
-| REST Logger | Ships log entries to an HTTP endpoint |
-| Loki Logger | Ships log entries to Grafana Loki |
-| Counter Metric | Prometheus counter definition |
-| Gauge Metric | Prometheus gauge definition |
-| Timer Metric | Prometheus histogram / summary definition |
+| Config node | Provided by | Purpose |
+|-------------|-------------|---------|
+| Console Logger | `node-red-plugincore` | Writes log output to stdout |
+| REST Logger | `node-red-plugincore` | Ships log entries to an HTTP endpoint |
+| Loki Logger | [`node-red-loki`](https://github.com/theotherwillembotha/nodered_loki) | Ships log entries to Grafana Loki — install separately |
+| Counter Metric | `node-red-plugincore` | Prometheus counter definition |
+| Gauge Metric | `node-red-plugincore` | Prometheus gauge definition |
+| Timer Metric | `node-red-plugincore` | Prometheus histogram / summary definition |
 
 ---
 
