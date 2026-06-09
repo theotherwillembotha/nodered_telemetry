@@ -69,7 +69,7 @@
 </script>
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
-Records timing observations to a Prometheus histogram or summary. Three nodes are typically chained in a flow — one set to **Start**, one to **Stop** — to measure the duration of operations across multiple steps.
+Records timing observations to a Prometheus histogram or summary. Three nodes are typically chained in a flow - one set to **Start**, one to **Stop** - to measure the duration of operations across multiple steps.
 
 ### Inputs
 : *msg* (object) : any Node-RED message. Depending on the function, the node reads or writes a value on `msg._timer`.
@@ -79,11 +79,11 @@ Records timing observations to a Prometheus histogram or summary. Three nodes ar
 
 ### Properties
 : *function* (select) : the operation this node performs when a message arrives.
-- **Start** — records the current timestamp (in milliseconds) into `msg._timer` and passes the message on.
-- **Stop** — reads the timestamp stored by a preceding Start node from `msg._timer`, calculates the elapsed time in milliseconds, and records the observation. If no timestamp is found the message is still passed through with no observation recorded.
-- **Observe** — reads a pre-calculated value from `msg._timer` and records it as an observation directly. Useful when the elapsed time is calculated externally.
+- **Start** - records the current timestamp (in milliseconds) into `msg._timer` and passes the message on.
+- **Stop** - reads the timestamp stored by a preceding Start node from `msg._timer`, calculates the elapsed time in milliseconds, and records the observation. If no timestamp is found the message is still passed through with no observation recorded.
+- **Observe** - reads a pre-calculated value from `msg._timer` and records it as an observation directly. Useful when the elapsed time is calculated externally.
 
 : *show status* (select) : controls what is displayed on the node in the flow canvas.
-- **None** — no status is displayed.
-- **Average** — displays the running average of all observations in milliseconds.
+- **None** - no status is displayed.
+- **Average** - displays the running average of all observations in milliseconds.
 </script>
