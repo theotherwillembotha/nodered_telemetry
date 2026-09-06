@@ -1,7 +1,7 @@
 
 import { Node } from "node-red";
 
-import {BaseNode, BaseNodeConfig, HistogramMetric, MetricsConfigNode, NodeDescription, NodeManager, onInput, SourceUtility, SummaryMetric, TimerMetricTemplate } from "@theotherwillembotha/node-red-plugincore"
+import {BaseNode, BaseNodeConfig, HistogramMetric, MetricCapability, NodeDescription, NodeManager, onInput, SourceUtility, SummaryMetric, TimerMetricTemplate, TimerMetricConfigNode } from "@theotherwillembotha/node-red-plugincore"
 import {InputConfig } from "@theotherwillembotha/node-red-plugincore"
 import { MetricsReference } from "@theotherwillembotha/node-red-plugincore"
 
@@ -31,34 +31,41 @@ interface TimerMetricNodeConfig extends BaseNodeConfig, MetricsReference, InputC
     templates: [
         { template: TimerMetricTemplate, config: {}}
     ],
-    dependencies:[ MetricsConfigNode ],
+    dependencies:[ TimerMetricConfigNode ],
     tags: [ "Metrics" ]
 })
 export class TimerMetricNode extends BaseNode<TimerMetricNodeConfig> {
 
     private _timer: HistogramMetric|SummaryMetric;
+    private _hasProvider: boolean;
 
     public constructor(node: Node, config: TimerMetricNodeConfig){
         super(node, config);
         let _this = this;
 
-        this._timer = (NodeManager.RED.nodes.getNode(config.timerConfig) as any).node().timer();        
+        const configNode = (NodeManager.RED.nodes.getNode(config.timerConfig) as any).node();
+        this._timer = configNode.timer();
+        this._hasProvider = configNode.metrics().supports(MetricCapability.Histogram);
 
-        this.node().status({});
-        if(config.timerShowStatus !== TimerShowStatus.None){
+        if (!this._hasProvider) {
+            this.node().status({ fill: "yellow", shape: "ring", text: "No metric provider" });
+        } else if (config.timerShowStatus !== TimerShowStatus.None) {
+            this.node().status({});
             this._timer.subscribe(_this, state => _this.node().status({
                 fill:"grey",
                 shape:"dot",
-                text:"avg: " + 
-                    ((state.average()) 
-                        ? (Math.round((state.average()! + Number.EPSILON) * 100) / 100) 
-                        : "- ") 
+                text:"avg: " +
+                    ((state.average())
+                        ? (Math.round((state.average()! + Number.EPSILON) * 100) / 100)
+                        : "- ")
                     + "ms"
             }));
+        } else {
+            this.node().status({});
         }
 
         this.node().on("close", () => {
-            if(config.timerShowStatus !== TimerShowStatus.None){
+            if (this._hasProvider && config.timerShowStatus !== TimerShowStatus.None) {
                 this._timer.unsubscribe(_this);
             }
         });

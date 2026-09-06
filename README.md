@@ -14,14 +14,8 @@ Either use the **Manage Palette** option in the Node-RED editor, or run the foll
 npm install @theotherwillembotha/node-red-telemetry
 ```
 
-> [!IMPORTANT]
-> **This plugin requires [`@theotherwillembotha/node-red-plugincore`](https://github.com/theotherwillembotha/nodered_plugincore) to be installed.**
->
-> `node-red-plugincore` is declared as a dependency and npm will install it automatically alongside this package. However, due to a [known Node-RED limitation](https://github.com/node-red/node-red/issues/3529), packages that arrive as transitive npm dependencies are only discovered by the Node-RED runtime on the **next startup**.
->
-> **You have two options:**
-> - Install [`@theotherwillembotha/node-red-plugincore`](https://flows.nodered.org/node/@theotherwillembotha/node-red-plugincore) via the palette manager or `npm install` **first**, then install this plugin - both will be available immediately without a restart.
-> - Install this plugin directly - `node-red-plugincore` will be installed automatically alongside it. **Restart Node-RED** once and both packages will be fully loaded.
+> [!NOTE]
+> This plugin is self-contained — `node-red-plugincore` is bundled inline and does **not** need to be installed separately.
 
 ### Nodes
 

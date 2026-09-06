@@ -1,7 +1,7 @@
 
 import { Node } from "node-red";
 
-import {BaseNode, BaseNodeConfig, GaugeMetric, GaugeMetricTemplate, MetricsConfigNode, NodeDescription, NodeManager, onInput, SourceUtility } from "@theotherwillembotha/node-red-plugincore"
+import {BaseNode, BaseNodeConfig, GaugeMetric, GaugeMetricConfigNode, GaugeMetricTemplate, MetricCapability, NodeDescription, NodeManager, onInput, SourceUtility } from "@theotherwillembotha/node-red-plugincore"
 import {InputConfig } from "@theotherwillembotha/node-red-plugincore"
 
 enum GaugeFunctionType{
@@ -23,24 +23,30 @@ interface GaugeMetricNodeConfig extends BaseNodeConfig, InputConfig {
     templates: [
         { template: GaugeMetricTemplate, config: {}}
     ],
-    dependencies:[ MetricsConfigNode ],
+    dependencies:[ GaugeMetricConfigNode ],
     tags: [ "Metrics" ]
 })
 export class GaugeMetricNode extends BaseNode<GaugeMetricNodeConfig> {
 
     private _gauge: GaugeMetric;
+    private _hasProvider: boolean;
 
     constructor(node: Node, config: GaugeMetricNodeConfig){
         super(node, config);
         let _this = this;
 
-        this._gauge = (NodeManager.RED.nodes.getNode(config.gaugeConfig) as any).node().gauge();
-        this._gauge.subscribe(_this, state => { _this.node().status({fill:"grey",shape:"dot",text:"" + state.value}); });
+        const configNode = (NodeManager.RED.nodes.getNode(config.gaugeConfig) as any).node();
+        this._gauge = configNode.gauge();
+        this._hasProvider = configNode.metrics().supports(MetricCapability.Gauge);
 
-        Promise.resolve()
-            .then(() => this._gauge.get())
-            .then(state => { _this.node().status({fill:"grey",shape:"dot",text:"" + (state?.value ? state.value : "0")})});
-
+        if (!this._hasProvider) {
+            this.node().status({ fill: "yellow", shape: "ring", text: "No metric provider" });
+        } else {
+            this._gauge.subscribe(_this, state => { _this.node().status({fill:"grey",shape:"dot",text:"" + state.value}); });
+            Promise.resolve()
+                .then(() => this._gauge.get())
+                .then(state => { _this.node().status({fill:"grey",shape:"dot",text:"" + (state?.value ? state.value : "0")}); });
+        }
 
         this.node().on("close", () => {
             this._gauge.unsubscribe(_this);
@@ -56,6 +62,5 @@ export class GaugeMetricNode extends BaseNode<GaugeMetricNodeConfig> {
             this._gauge.dec();
         }
         this.node().send(message);
-        //this.node().status({fill:"grey",shape:"dot",text:"" + (this._gauge.get()).value});
     }
 }

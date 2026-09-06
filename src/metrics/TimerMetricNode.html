@@ -16,9 +16,8 @@
 <script type="text/javascript" template-section="onCompose">
     node
         .addDefault("name", { value:"Timer Example", required:true})
-        .addDefault("timerConfig", { value:"TimerMetricConfigNode", required:true})
         .addDefault("timerFunction", { value:"Start", required:true})
-        .addDefault("timerShowStatus", { value:"none", required:true})
+        .addDefault("timerShowStatus", { value:"None", required:true})
         .setIcon("prometheus.png")
         .setPaletteLabel("Timer Metric")
         .setLabelStyle("node_label_white")
