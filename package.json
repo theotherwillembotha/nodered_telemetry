@@ -34,7 +34,7 @@
     "nodered": ">=4.0.0"
   },
   "dependencies": {
-    "@theotherwillembotha/node-red-plugincore": "^0.2.0",
+    "@theotherwillembotha/node-red-plugincore": "^0.3.0",
     "@theotherwillembotha/node-red-logging": "^0.2.0"
   },
   "devDependencies": {
