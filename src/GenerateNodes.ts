@@ -1,5 +1,6 @@
 import { NodeGenerator, BasicTemplate, SettingsTemplate, SettingsService, DelegatedConfigReferenceNode, NodeTypeService } from "@theotherwillembotha/node-red-plugincore"
-import { LoggerTemplate, LoggerService, ConsoleLoggerConfigNode, RestLoggerConfigNode } from "@theotherwillembotha/node-red-plugincore"
+import { LoggerTemplate, LoggerService } from "@theotherwillembotha/node-red-plugincore"
+import { ConsoleLoggerConfigNode, RestLoggerConfigNode } from "@theotherwillembotha/node-red-logging"
 import { MetricsTemplate, CounterMetricTemplate, GaugeMetricTemplate, TimerMetricTemplate } from "@theotherwillembotha/node-red-plugincore"
 import { MetricsService, MetricsConfigNode, CounterMetricConfigNode, GaugeMetricConfigNode, TimerMetricConfigNode } from "@theotherwillembotha/node-red-plugincore"
 import { WebhookTemplate, WebhookServerConfigNode, WebhookServerService } from "@theotherwillembotha/node-red-plugincore"
@@ -29,7 +30,7 @@ new NodeGenerator("./src/")
     .registerTemplate(TimerMetricTemplate)
     .registerTemplate(WebhookTemplate)
 
-    // plugincore infrastructure nodes (bundled inline — must be registered here since plugincore is not installed separately)
+    // plugincore infrastructure nodes (bundled inline - must be registered here since plugincore is not installed separately)
     .registerNode(DelegatedConfigReferenceNode)
     .registerNode(ConsoleLoggerConfigNode)
     .registerNode(RestLoggerConfigNode)

@@ -1,6 +1,6 @@
 # @theotherwillembotha/node-red-telemetry
 
-Node-RED nodes for structured logging and Prometheus metrics. Built on [@theotherwillembotha/node-red-plugincore](https://github.com/theotherwillembotha/nodered_plugincore).
+Node-RED nodes for structured logging and metrics. Built on [@theotherwillembotha/node-red-plugincore](https://github.com/theotherwillembotha/nodered_plugincore).
 
 ---
 
@@ -15,36 +15,65 @@ npm install @theotherwillembotha/node-red-telemetry
 ```
 
 > [!NOTE]
-> This plugin is self-contained — `node-red-plugincore` is bundled inline and does **not** need to be installed separately.
+> This plugin is self-contained - `node-red-plugincore` is bundled inline and does **not** need to be installed separately.
 
 ### Nodes
 
 #### Logging
 
-| Node | Description |
-|------|-------------|
-| **Logger Node** | Logs incoming messages to a configured logging backend. Passes the message through unchanged. Attach a Console Logger or REST Logger config node (both provided by `node-red-plugincore`), or a Loki Logger config node (provided by [`node-red-loki`](https://github.com/theotherwillembotha/nodered_loki)) to control the destination. |
+##### Logger Node
+
+![Logger Node editor](documentation/LoggerNode.png)
+
+Logs the incoming message to a configured logging backend and passes it through unchanged.
+
+Select a logger config node (Console Logger, REST Logger, or Loki Logger) to control the destination. When **Override Template** is checked, the node uses its own Handlebars template instead of the one defined on the logger config node - useful when different Logger nodes in the same flow need different output formats.
 
 #### Metrics
 
-| Node | Description |
-|------|-------------|
-| **Counter Metric Node** | Increments a Prometheus counter each time a message is received. Displays the current count on the node status. |
-| **Gauge Metric Node** | Increases or decreases a Prometheus gauge on each message. Direction (Increase / Decrease) is configurable per node. |
-| **Timer Metric Node** | Records timing observations to a Prometheus histogram. Supports Start / Stop / Observe modes for measuring durations across multiple nodes in a flow. |
+##### Counter Metric Node
 
-### Config nodes (provided by node-red-plugincore)
+![Counter Metric Node editor](documentation/CounterMetric.png)
+
+Increments a counter by 1 each time a message is received. The current counter value is displayed on the node status. The message payload is not read - the counter is always incremented by 1.
+
+##### Gauge Metric Node
+
+![Gauge Metric Node editor](documentation/GaugeMetric.png)
+
+Increases or decreases a gauge by 1 each time a message is received. The current gauge value is displayed on the node status.
+
+**Function** controls the direction:
+- **Increase** - increments the gauge by 1
+- **Decrease** - decrements the gauge by 1
+
+##### Timer Metric Node
+
+![Timer Metric Node editor](documentation/TimerMetricNode.png)
+
+Records timing observations to a histogram or summary. Three nodes are typically chained in a flow - one set to **Start**, one to **Stop** - to measure the duration of operations across multiple steps.
+
+**Function** controls the operation performed on each message:
+- **Start** - records the current timestamp (in milliseconds) into `msg._timer` and passes the message on.
+- **Stop** - reads the timestamp stored by a preceding Start node, calculates the elapsed time in milliseconds, and records the observation. If no timestamp is found the message is still passed through with no observation recorded.
+- **Observe** - reads a pre-calculated value from `msg._timer` and records it as an observation directly. Useful when the elapsed time is calculated externally.
+
+**Show Status** controls what is displayed on the node in the flow canvas:
+- **None** - no status is displayed.
+- **Average** - displays the running average of all observations in milliseconds.
+
+### Config nodes
 
 These config nodes are shared across all plugins built on the framework.
 
 | Config node | Provided by | Purpose |
 |-------------|-------------|---------|
-| Console Logger | `node-red-plugincore` | Writes log output to stdout |
-| REST Logger | `node-red-plugincore` | Ships log entries to an HTTP endpoint |
+| Console Logger | [`node-red-logging`](https://github.com/theotherwillembotha/nodered_logging) | Writes log output to stdout |
+| REST Logger | [`node-red-logging`](https://github.com/theotherwillembotha/nodered_logging) | Ships log entries to an HTTP endpoint |
 | Loki Logger | [`node-red-loki`](https://github.com/theotherwillembotha/nodered_loki) | Ships log entries to Grafana Loki - install separately |
-| Counter Metric | `node-red-plugincore` | Prometheus counter definition |
-| Gauge Metric | `node-red-plugincore` | Prometheus gauge definition |
-| Timer Metric | `node-red-plugincore` | Prometheus histogram / summary definition |
+| Counter Metric | [`node-red-prometheus`](https://github.com/theotherwillembotha/nodered_prometheus) | Counter metric definition |
+| Gauge Metric | [`node-red-prometheus`](https://github.com/theotherwillembotha/nodered_prometheus) | Gauge metric definition |
+| Timer Metric | [`node-red-prometheus`](https://github.com/theotherwillembotha/nodered_prometheus) | Histogram / summary metric definition |
 
 ---
 
@@ -65,7 +94,7 @@ The message is then delayed by a few seconds before being handed off to two furt
 - **Metrics --** - the same gauge used by *Metrics ++*, this time decrementing it.
 - **Timer Example Stop** - stops the timer that was started by *Timer Example Start* and records the observation.
 
-The **Get Metrics** injection polls the metrics endpoint directly, retrieving the current state of all registered metrics - the same way Prometheus would scrape them.
+The **Get Metrics** injection polls the metrics endpoint directly, retrieving the current state of all registered metrics.
 
 Example scrape output:
 
@@ -87,6 +116,52 @@ summary_6a528fb7faa12ba3_count{flow="undefined",type="TimerMetricConfigNode",nam
 # TYPE gauge_a90b1d118eeefaee gauge
 gauge_a90b1d118eeefaee{flow="undefined",type="GaugeMetricConfigNode",name="Messages being processed",id="a90b1d118eeefaee",metric="Messages being processed"} 1
 ```
+
+### Logger Example
+
+![Logger Example Flow](documentation/logging_example.png)
+
+A simple flow demonstrating structured logging across a processing step:
+
+- An **Inject** node triggers the flow with the payload `"hello world"`.
+- **Log Start** - a Logger node that logs the message id and payload at the start of the sequence.
+- **Do Something** - a Function node that reverses the payload string.
+- **Log End** - a Logger node that logs the message id and the transformed payload at the end of the sequence.
+
+Both Logger nodes use a Console Logger config node with the following Handlebars template:
+
+```
+messageId: {{{json msg._msgid}}}
+input:{{{json msg.payload}}}
+```
+
+> The `{{{json ...}}}` helper serializes the value as a JSON string. Triple braces are used to prevent HTML escaping.
+
+Running the flow produces the following output on the console:
+
+```
+2026-09-11T21:39:18.057Z 9f05d23146d16f67 INFO {
+  id: '9f05d23146d16f67',
+  node: 'Log Start',
+  type: 'LoggerNode',
+  flow: 'Flow 1',
+  instance: '172.21.0.2'
+}
+messageId: "fb46bfbabd46de37"
+input:"hello world"
+
+2026-09-11T21:39:18.058Z 0551864117ea9c90 INFO {
+  id: '0551864117ea9c90',
+  node: 'Log End',
+  type: 'LoggerNode',
+  flow: 'Flow 1',
+  instance: '172.21.0.2'
+}
+messageId:"fb46bfbabd46de37"
+output:"dlrow olleh"
+```
+
+Each log entry has a structured header - the ID and name of the Logger node that emitted it, its type, the flow it belongs to, and the Node-RED instance address. The instance field is particularly useful when a log aggregator (such as Loki) is collecting from multiple Node-RED instances.
 
 ---
 

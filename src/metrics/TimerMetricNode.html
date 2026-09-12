@@ -18,7 +18,7 @@
         .addDefault("name", { value:"Timer Example", required:true})
         .addDefault("timerFunction", { value:"Start", required:true})
         .addDefault("timerShowStatus", { value:"None", required:true})
-        .setIcon("prometheus.png")
+        .setIcon("timer.png")
         .setPaletteLabel("Timer Metric")
         .setLabelStyle("node_label_white")
         .setLabel(function() {return this.name })
@@ -68,7 +68,7 @@
 </script>
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
-Records timing observations to a Prometheus histogram or summary. Three nodes are typically chained in a flow - one set to **Start**, one to **Stop** - to measure the duration of operations across multiple steps.
+Records timing observations to a histogram or summary. Three nodes are typically chained in a flow - one set to **Start**, one to **Stop** - to measure the duration of operations across multiple steps.
 
 ### Inputs
 : *msg* (object) : any Node-RED message. Depending on the function, the node reads or writes a value on `msg._timer`.

@@ -1,0 +1,6 @@
+src/
+documentation/
+tsconfig.json
+.gitignore
+esbuild.js
+package-lock.json

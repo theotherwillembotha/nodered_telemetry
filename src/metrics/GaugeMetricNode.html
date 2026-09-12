@@ -3,7 +3,7 @@
     node
         .addDefault("name", { value:"Gauge Example", required:true})
         .addDefault("gaugeFunction", { value:"Increase", required:true})
-        .setIcon("prometheus.png")
+        .setIcon("gauge.png")
         .setPaletteLabel("Gauge Metric")
         .setLabelStyle("node_label_white")
         .setLabel(function() {return this.name })
@@ -39,7 +39,7 @@
 
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
-Increases or decreases a Prometheus gauge by 1 each time a message is received. The current gauge value is displayed on the node status.
+Increases or decreases a gauge by 1 each time a message is received. The current gauge value is displayed on the node status.
 
 ### Inputs
 : *msg* (object) : any Node-RED message. The payload is not read; the gauge is adjusted by 1 in the configured direction.

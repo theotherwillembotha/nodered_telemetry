@@ -2,7 +2,7 @@
 <script type="text/javascript" template-section="onCompose">
     node
         .addDefault("name", { value:"Counter Example", required:true})
-        .setIcon("prometheus.png")
+        .setIcon("counter.png")
         .setPaletteLabel("Counter Metric")
         .setLabelStyle("node_label_white")
         .setLabel(function() {return this.name })
@@ -20,7 +20,7 @@
 
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
-Increments a Prometheus counter by 1 each time a message is received. The current counter value is displayed on the node status.
+Increments a counter by 1 each time a message is received. The current counter value is displayed on the node status.
 
 ### Inputs
 : *msg* (object) : any Node-RED message. The payload is not read; the counter is always incremented by 1.
