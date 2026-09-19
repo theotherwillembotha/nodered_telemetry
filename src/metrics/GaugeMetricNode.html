@@ -1,8 +1,23 @@
+<div template-section="onIncludeOnce">
+    <style>
+        .towb_editorlabel {
+            width: 120px !important;
+        }
+        .towb_editorfield {
+            width: 70% !important;
+        }
+        .red-ui-typedInput-container {
+            width: 70% !important;
+        }
+    </style>
+</div>
 
 <script type="text/javascript" template-section="onCompose">
     node
         .addDefault("name", { value:"Gauge Example", required:true})
         .addDefault("gaugeFunction", { value:"Increase", required:true})
+        .addDefault("gaugeShowStatus", { value:"Value", required:true})
+        .addDefault("gaugeKey", { value:"", required:false})
         .setIcon("gauge.png")
         .setPaletteLabel("Gauge Metric")
         .setLabelStyle("node_label_white")
@@ -23,20 +38,60 @@
             { value: "Decrease", label: "Decrease"}
         ]
     }]});
+
+    let gaugeShowStatusSelection = $("#node-input-gaugeShowStatus");
+    gaugeShowStatusSelection.typedInput({type:"gaugeShowStatus", types:[{
+        value: "gaugeShowStatus",
+        options: [
+            { value: "Value", label: "Value"},
+            { value: "None", label: "None"},
+        ]
+    }]});
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditSave">
+    let _thisId = this.id;
+    let thisKey = this.gaugeKey;
+    if (thisKey) {
+        let counterpart = (this.gaugeFunction === "Increase") ? "Decrease" : "Increase";
+        let found = false;
+        RED.nodes.eachNode(function(n) {
+            if (n.type === "GaugeMetricNode" && n.id !== _thisId) {
+                if (n.gaugeKey === thisKey && n.gaugeFunction === counterpart) {
+                    found = true;
+                }
+            }
+        });
+        if (!found) {
+            RED.notify(
+                "Gauge key <strong>" + RED.utils.sanitize(thisKey) + "</strong>: no matching <strong>" + counterpart + "</strong> gauge found.",
+                { type: "warning", timeout: 5000 }
+            );
+        }
+    }
 </script>
 
 <script type="text/html" template-section="onIncludeEditForm">
     <div class="form-row">
         <label class="towb_editorlabel" for="node-input-name"><i class="fa fa-font"></i> Name</label>
-        <input type="text" id="node-input-name" />
+        <input class="towb_editorfield" type="text" id="node-input-name" />
     </div>
 
     <div class="form-row">
         <label class="towb_editorlabel" for="node-input-gaugeFunction"><i class="fa fa-cogs"></i> Function</label>
-        <input type="text" id="node-input-gaugeFunction" />
+        <input class="towb_editorfield" type="text" id="node-input-gaugeFunction" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-gaugeKey"><i class="fa fa-key"></i> Gauge Key</label>
+        <input class="towb_editorfield" type="text" id="node-input-gaugeKey" placeholder="Leave empty for standalone gauge" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-gaugeShowStatus"><i class="fa fa-eye"></i> Show Status</label>
+        <input class="towb_editorfield" type="text" id="node-input-gaugeShowStatus" />
     </div>
 </script>
-
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
 Increases or decreases a gauge by 1 each time a message is received. The current gauge value is displayed on the node status.
@@ -51,4 +106,10 @@ Increases or decreases a gauge by 1 each time a message is received. The current
 : *function* (select) : the direction to adjust the gauge on each message.
 - **Increase** - increments the gauge by 1
 - **Decrease** - decrements the gauge by 1
+
+: *gauge key* (string) : a shared key that links multiple gauge nodes to the same underlying metric. When two or more gauge nodes use the same key and provider, they operate on a single gauge — one can Increase while the other Decreases. Leave empty for a standalone gauge.
+
+: *show status* (select) : controls what is displayed on the node in the flow canvas.
+- **Value** - displays the current gauge value.
+- **None** - no status is displayed.
 </script>

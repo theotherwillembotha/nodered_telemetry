@@ -1,7 +1,21 @@
+<div template-section="onIncludeOnce">
+    <style>
+        .towb_editorlabel {
+            width: 120px !important;
+        }
+        .towb_editorfield {
+            width: 70% !important;
+        }
+        .red-ui-typedInput-container {
+            width: 70% !important;
+        }
+    </style>
+</div>
 
 <script type="text/javascript" template-section="onCompose">
     node
         .addDefault("name", { value:"Counter Example", required:true})
+        .addDefault("counterShowStatus", { value:"Count", required:true})
         .setIcon("counter.png")
         .setPaletteLabel("Counter Metric")
         .setLabelStyle("node_label_white")
@@ -11,13 +25,28 @@
         .addOutputs("passthrough")
 </script>
 
+<script type="text/javascript" template-section="onIncludeEditPrepare">
+    let counterShowStatusSelection = $("#node-input-counterShowStatus");
+    counterShowStatusSelection.typedInput({type:"counterShowStatus", types:[{
+        value: "counterShowStatus",
+        options: [
+            { value: "Count", label: "Count"},
+            { value: "None", label: "None"},
+        ]
+    }]});
+</script>
+
 <script type="text/html" template-section="onIncludeEditForm">
     <div class="form-row">
         <label class="towb_editorlabel" for="node-input-name"><i class="fa fa-font"></i> Name</label>
-        <input type="text" id="node-input-name" />
+        <input class="towb_editorfield" type="text" id="node-input-name" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-counterShowStatus"><i class="fa fa-eye"></i> Show Status</label>
+        <input class="towb_editorfield" type="text" id="node-input-counterShowStatus" />
     </div>
 </script>
-
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
 Increments a counter by 1 each time a message is received. The current counter value is displayed on the node status.
