@@ -1,6 +1,6 @@
 {
   "name": "@theotherwillembotha/node-red-telemetry",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Node-RED nodes for structured logging and metrics, built on node-red-plugincore.",
   "author": "Willem Botha (@theotherwillembotha)",
   "license": "ISC",
@@ -34,7 +34,7 @@
     "nodered": ">=4.0.0"
   },
   "dependencies": {
-    "@theotherwillembotha/node-red-plugincore": "^0.4.3"
+    "@theotherwillembotha/node-red-plugincore": "^0.4.4"
   },
   "devDependencies": {
     "@theotherwillembotha/node-red-plugincore": "../nodered_plugincore",

@@ -51,6 +51,7 @@
         $("#section_configfragment").toggle(!_isTimerStart);
         $("#section_timershowstatus").toggle(!_isTimerStart);
         $("#section_timerobserveproperty").toggle(isObserve);
+        node._def.defaults.metricsReference.required = !_isTimerStart;
     }
     timerFunctionSelection.on("change", function() {
         updateTimerFunctionVisibility(timerFunctionSelection.typedInput("value"));
